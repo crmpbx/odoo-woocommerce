@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_product_tag_tree" model="ir.ui.view">
+        <field name="name">product.tag.tree.view</field>
+        <field name="model">product.tag.woo</field>
+        <field name="arch" type="xml">
+            <tree string="WooCommerce Tags" js_class="woo_import_product_tag_woo_button">
+                <field name="name" required="1"/>
+                <field name="slug"/>
+                <field name="woo_instance_id" readonly="1"/>
+                <field name="woo_id" readonly="1"/>
+                <field name="is_exported"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_product_tag_form" model="ir.ui.view">
+        <field name="name">product.tag.form.view</field>
+        <field name="model">product.tag.woo</field>
+        <field name="arch" type="xml">
+            <form string="WooCommerce Tags">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                        </group>
+
+                        <group>
+                            <field name="slug"/>
+                            <field name="woo_instance_id" widget="selection"/>
+                            <field name="is_exported"/>
+                            <p colspan="2" class="alert alert-warning" role="alert">
+                                    <u>
+                                        <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                                    </u>
+                                    <b>
+                                        Do not input or change this unless you know what you are doing!
+                                    </b>
+                                </p>
+                            <field name="woo_id" string="WooCommerce Id"/>
+                        </group>
+                                            <group string="Description">
+                        <field name="description" string="Description" placeholder="Your category description"/>
+                    </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- <record id="view_product_tag_search" model="ir.ui.view">
+        <field name="name">view.product.tag.search.view</field>
+        <field name="model">product.tag.woo</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Woo Synced Product Tags" name="woo_imported_product_tags"
+                        domain="[('is_exported', '=', True)]"/>
+            </search>
+        </field>
+    </record> -->
+
+    <record id="action_product_tag" model="ir.actions.act_window">
+        <field name="name">Product Tag</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.tag.woo</field>
+        <field name="view_id" ref="view_product_tag_tree"/>
+        <field name="context">{'search_default_woo_imported_product_tags': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

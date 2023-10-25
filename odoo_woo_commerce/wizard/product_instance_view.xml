@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_import_product_instance_form" model="ir.ui.view">
+        <field name="name">product.instance.import.form.view</field>
+        <field name="model">woo.product.instance.imp</field>
+        <field name="arch" type="xml">
+            <form string="Select Instance">
+                <sheet>
+                    <div>
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <u>
+                                <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                            </u>
+                            <b>
+                                Are you sure to import products from this instance?
+                            </b>
+                        </p>
+                    </div>
+
+                    <group>
+                        <field name="woo_instance_id" required="1" options="{'no_create':True,'no_create_edit':True}"/>
+                    </group>
+
+                    <footer>
+                        <button name="product_instance_selected_for_imp" string="Import Products" type="object"
+                                class="oe_highlight"/>
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_woo_import_product_instance" model="ir.actions.act_window">
+        <field name="name">WooCommerce - Import Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">woo.product.instance.imp</field>
+        <field name="view_id" ref="view_import_product_instance_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="price_margin_change" model="ir.ui.view">
+        <field name="name">Change Margin</field>
+        <field name="model">price.margin.change</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p>
+                        Change price margin for selected products.
+                    </p>
+                    <group>
+                        <field name="new_margin" required="1"/>
+                        <separator></separator>
+                        <p colspan="2" > <b>Enabling this would export updates to all products marked "Export changes to Woocommerce". Otherwise changes would not be propagated to WooCommerce until other changes to products. </b></p>
+                        <field name="export" string="Export price change"/>
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <u>
+                                <h3 style="font-weight:bold;color:#7d5a29">Warning :</h3>
+                            </u>
+                            <b>
+                                If you select all products export might take up to and hour+
+                            </b>
+                        </p>
+                    </group>
+                    <footer>
+                        <button name="change_margin" string="Confirm" type="object"
+                            class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_view_price_margin_change" model="ir.actions.act_window">
+        <field name="name">Change Margin</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">price.margin.change</field>
+        <field name="binding_model_id" ref="model_product_template" />
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_export_enable" model="ir.ui.view">
+        <field name="name">Enable Export and Publish</field>
+        <field name="model">product.export.enable</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p>
+                        All selected products are going to be exported, set to "Published" on WooCommerce, with stock managment enabled. Please review
+                        them before Confirm. With alot of products it might take some time (+1h).</p>
+                    <footer>
+                        <button name="export_enable" string="Confirm" type="object"
+                            class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_view_export_enable" model="ir.actions.act_window">
+        <field name="name">Enable Export and Publish</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.export.enable</field>
+        <field name="binding_model_id" ref="model_product_template" />
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="view_export_disable" model="ir.ui.view">
+        <field name="name">Disable Export</field>
+        <field name="model">product.export.disable</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p>
+                        All selected products are going to be stoped exporting to WooCommerce. Please review
+                        them before Confirm.</p>
+                    <footer>
+                        <button name="export_disable" string="Confirm" type="object"
+                            class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_view_export_disable" model="ir.actions.act_window">
+        <field name="name">Disable Export</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.export.disable</field>
+        <field name="binding_model_id" ref="model_product_template" />
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="view_export_unpublish" model="ir.ui.view">
+        <field name="name">Unpublish products</field>
+        <field name="model">product.export.unpublish</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p>
+                        All selected products are going to be set "DRAFT" on WooCommerce. Please review
+                        them before Confirm.</p>
+                    <footer>
+                        <button name="export_unpublish" string="Confirm" type="object"
+                            class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_view_export_unpublish" model="ir.actions.act_window">
+        <field name="name">Unpublish products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.export.unpublish</field>
+        <field name="binding_model_id" ref="model_product_template" />
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_export_publish" model="ir.ui.view">
+        <field name="name">Publish products</field>
+        <field name="model">product.export.publish</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <p>
+                        All selected products are going to be set "PUBLISHED" on WooCommerce. Please review
+                        them before Confirm.</p>
+                    <footer>
+                        <button name="export_publish" string="Confirm" type="object"
+                            class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_export_publish" model="ir.actions.act_window">
+        <field name="name">Publish products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.export.publish</field>
+        <field name="binding_model_id" ref="model_product_template" />
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

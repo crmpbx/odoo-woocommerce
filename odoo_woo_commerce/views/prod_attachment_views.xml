@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<record id="custom_attachment_form" model="ir.ui.view">
+        <field name="name">attachment.custom</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mimetype']" position="after">
+                    <field name="public_url" widget="url"/> 
+            </xpath>
+        </field>
+    </record>
+</odoo>

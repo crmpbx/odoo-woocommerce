@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_brand_search_form_view" model="ir.ui.view">
+        <field name="name">product.brand.search.form</field>
+        <field name="model">product.brand</field>
+        <field name="arch" type="xml">
+            <search string="Product Brand">
+                <field name="name" />
+                <field name="partner_id" />
+            </search>
+        </field>
+    </record>
+    <record id="action_open_brand_products" model="ir.actions.act_window">
+        <field name="name">Brand Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,form,tree</field>
+        <field name="domain">[('product_brand_id', '=', active_id)]</field>
+    </record>
+    <record id="action_open_single_product_brand" model="ir.actions.act_window">
+        <field name="name">Product Brand</field>
+        <field name="res_model">product.brand</field>
+        <field name="view_mode">kanban,form,tree</field>
+        <field name="target">current</field>
+        <field name="domain">[('product_ids', 'in', active_id)]</field>
+    </record>
+    <record id="view_product_brand_form" model="ir.ui.view">
+        <field name="name">product.brand.form</field>
+        <field name="model">product.brand</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="%(action_open_brand_products)d"
+                            type="action"
+                            class="oe_stat_button"
+                            icon="fa-cubes"
+                        >
+                            <field
+                                name="products_count"
+                                widget="statinfo"
+                                string="Products"
+                                context="{'default_product_brand_id': active_id}"
+                            />
+                        </button>
+                    </div>
+                    <field name="logo" widget="image" class="oe_avatar" readonly="1" />
+                    <div class="oe_title">
+                        <label for="name" string="Brand Name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group name="main">
+                        <group name="partner">
+                            <field name="partner_id" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="General" string="General">
+                            <form string="Technical Form">
+                                <sheet>
+                                    <group>
+                                        <field name="woo_instance_id" widget="selection" />
+                                        <field name="is_exported" />
+                                        <field name="description" />
+                                        <p colspan="2" class="alert alert-warning" role="alert">
+                                            <u>
+                                                <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                                            </u>
+                                            <b>
+                                                Do not input or change this unless you know what you
+                                                are doing!
+                                            </b>
+                                        </p>
+                                        <field name="woo_id" />
+                                    </group>
+                                </sheet>
+                            </form>
+                        </page>
+                        <page string="Images">
+                            <form string="Brand Image" create="0">
+                                <sheet>
+                                    <div>
+                                        <p colspan="2" class="alert alert-warning" role="alert">
+                                            <u>
+                                                <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                                            </u>
+                                            <b>
+                                                Please choose images of image extensions .jpg .jpeg,
+                                                .png.
+                                            </b>
+                                            <b>
+                                                Wait for all of them to appear in the section bellow
+                                                before
+                                                saving.
+                                            </b>
+                                        </p>
+                                    </div>
+
+                                    <div class="row o_website_sale_image_modal">
+                                        <div class="col-md-6 col-xl-5">
+                                            <group>
+                                                <field name="woo_image_2"
+                                                    widget="many2many_binary" />
+                                            </group>
+                                        </div>
+                                    </div>
+                                </sheet>
+                            </form>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_product_brand_tree" model="ir.ui.view">
+        <field name="name">product.brand.tree</field>
+        <field name="model">product.brand</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="description" />
+                <field name="partner_id" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_product_brand_kanban" model="ir.ui.view">
+        <field name="name">product.brand.kanban</field>
+        <field name="model">product.brand</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id" />
+                <field name="logo" />
+                <field name="products_count" />
+                <field name="description" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <img
+                                    t-att-src="kanban_image('product.brand', 'logo', record.id.raw_value)"
+                                    alt="Logo"
+                                />
+                            </div>
+                            <div class="oe_kanban_details">
+                                <h4>
+                                    <field name="name" />
+                                </h4>
+                                <div>
+                                    <a
+                                        name="%(odoo_woo_commerce.action_open_brand_products)d"
+                                        type="action"
+                                    >
+                                        <t t-esc="record.products_count.value" /> Products </a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="view_product_template_search_brand" model="ir.ui.view">
+        <field name="name">product.template.search.brand</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_brand_id" />
+                <filter
+                    string="Brand"
+                    name="groupby_brand"
+                    domain="[]"
+                    context="{'group_by' : 'product_brand_id'}"
+                />
+                <separator />
+            </field>
+        </field>
+    </record>
+    <!-- <record id="product_template_form_brand_add" model="ir.ui.view">
+        <field name="name">product.template.product.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='woo_tag_id']" position="after">
+                <field name="product_brand_id" placeholder="Brand" />
+            </xpath>
+        </field>
+    </record> -->
+    <record id="view_product_template_kanban_brand" model="ir.ui.view">
+        <field name="name">product kanban view: add brand</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//strong[hasclass('o_kanban_record_title')]" position="after">
+                <div>
+                    <a
+                        t-if="record.product_brand_id"
+                        type="action"
+                        name="%(action_open_single_product_brand)d"
+                    >
+                        <field name="product_brand_id" />
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_product_variant_kanban_brand" model="ir.ui.view">
+        <field name="name">product variant kanban view: add brand</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//div[hasclass('oe_kanban_details')]/strong[1]"
+                position="after"
+            >
+                <div>
+                    <a t-if="record.product_brand_id" type="open">
+                        <field name="product_brand_id" />
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_product_template_tree_brand" model="ir.ui.view">
+        <field name="name">product tree view: add brand</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_brand_id" />
+            </field>
+        </field>
+    </record>
+    <record id="view_product_variant_tree_brand" model="ir.ui.view">
+        <field name="name">product variant tree view: add brand</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_brand_id" />
+            </field>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_product_brand">
+        <field name="name">Brand</field>
+        <field name="res_model">product.brand</field>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+    <!-- <record id="action_product_brand_woo" model="ir.actions.act_window">
+        <field name="name">Product Brand</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.brand</field>
+        <field name="view_id" ref="product.product_brand_list_view" />
+        <field name="context">{'search_default_woo_imported_categories': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record> -->
+    
+    <menuitem
+    id="menu_sales_orders3"
+    name="Order List"
+    action="sale.action_orders"
+    parent="sale.sale_menu_root"
+    sequence="149" />
+
+    <menuitem
+        id="menu_sales_producs2"
+        name="Product List"
+        action="action_product_template_woo"
+        parent="sale.sale_menu_root"
+        sequence="150" />
+
+    <menuitem
+        id="menu_sales_product_categ2"
+        name="Categories"
+        action="action_product_category_woo"
+        parent="sale.sale_menu_root"
+        sequence="151" />
+    <menuitem
+        name="Brands"
+        id="menu_product_brand2"
+        action="action_product_brand"
+        parent="sale.sale_menu_root"
+        sequence="152" />
+
+    <menuitem id="menu_tags2"
+        name="Tags"
+        parent="sale.sale_menu_root"
+        action="action_product_tag"
+        sequence="153" />
+
+    <menuitem id="menu_attr_dropdown2"
+        name="Attributes"
+        parent="sale.sale_menu_root"
+        sequence="154" />
+
+    <menuitem id="menu__product_attrs2"
+        name="Product Attributes"
+        parent="menu_attr_dropdown2"
+        action="action_product_attribute_woo"
+        sequence="155" />
+
+    <menuitem id="menu_product_attr_terms2"
+        name="Product Attributes Terms"
+        parent="menu_attr_dropdown2"
+        action="action_product_attribute_term_woo"
+        sequence="156" />
+
+        <menuitem
+        id="menu_sales_orders2"
+        name="Order List"
+        action="sale.action_orders"
+        parent="stock.menu_stock_root"
+        sequence="149" />
+
+        <menuitem
+        id="menu_sales_producs3"
+        name="Product List"
+        action="action_product_template_woo"
+        parent="stock.menu_stock_root"
+        sequence="150" />
+        
+    <menuitem
+        id="menu_sales_product_categ3"
+        name="Categories"
+        action="action_product_category_woo"
+        parent="stock.menu_stock_root"
+        sequence="151" />
+    <menuitem
+        name="Brands"
+        id="menu_product_brand3"
+        action="action_product_brand"
+        parent="stock.menu_stock_root"
+        sequence="152" />
+
+    <menuitem id="menu_tags3"
+        name="Tags"
+        parent="stock.menu_stock_root"
+        action="action_product_tag"
+        sequence="153" />
+
+    <menuitem id="menu_attr_dropdown3"
+        name="Attributes"
+        parent="stock.menu_stock_root"
+        sequence="154" />
+
+    <menuitem id="menu__product_attrs3"
+        name="Product Attributes"
+        parent="menu_attr_dropdown3"
+        action="action_product_attribute_woo"
+        sequence="155" />
+
+    <menuitem id="menu_product_attr_terms3"
+        name="Product Attributes Terms"
+        parent="menu_attr_dropdown3"
+        action="action_product_attribute_term_woo"
+        sequence="156" />
+</odoo>

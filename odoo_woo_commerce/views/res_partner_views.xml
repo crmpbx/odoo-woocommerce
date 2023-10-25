@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_res_config_settings" model="ir.ui.view">
+        <field name="name">view.res.config.settings.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='contacts_settings']" position="inside">
+                <div class="row mt16 o_settings_container">
+                    <div class="col-xs-12 col-md-6 o_setting_box"
+                         title="SMS History"
+                         id="partner_sms" attrs="{'invisible': [('sms_history' ,'=', False)]}">
+                        <div class="o_setting_left_pane">
+                            <field name="sms_history"/>
+                        </div>
+                        <div class="o_setting_right_pane"
+                             id="partner_sms_settings">
+                            <label for="sms_history"/>
+                            <div class="text-muted">
+                                Show SMS History
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_cust_form_custom" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object"
+                        string="SMS"
+                        name="action_view_partner_sms" icon="fa-comments-o"/>
+                <button class="oe_stat_button" type="object"
+                        string="Recaived Emails"
+                        name="sent_email_history" icon="fa-mail-forward"/>
+                <button class="oe_stat_button" type="object"
+                        string="Sent Emails"
+                        name="received_email_history" icon="fa-mail-reply"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <separator string="WooCommerce"/>
+                <group>
+                    <field name='b2b' widget="selection_badge" />
+                    <field name="woo_id" />
+                    <field name="woo_instance_id" />
+                    <field name="is_exported" />
+                </group>
+                <separator string="Refferal Program"/>
+                <group>
+                    <field name="user_lvl" readonly="1"/>
+                    <field name="points"/>
+                    <field name="friends_count" readonly="1"/>
+                </group>
+
+                <!-- <field name="commission_type"/>
+                <field name="commission_value"/> -->
+            </xpath>
+
+            <!--DB
+            <field name="email" position="attributes">-->
+            <!--                <attribute name="required">0</attribute>-->
+            <!--            </field>-->
+
+            <field name="child_ids" position="attributes">
+                <attribute name="context">{'default_email': email}</attribute>
+            </field>
+
+        </field>
+    </record>
+
+    <record id="view_cutomer_tree_view_inherit" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">woo_import_customer_button</attribute>
+            </xpath>
+            <xpath expr="//field[@name='display_name']" position="after">
+                <field name="woo_id" readonly='1' />
+                <field name='b2b' string="Type" />
+                <field name="orders" string="Orders" readonly="1" />
+                <field name="user_lvl" readonly="1"/>
+                <field name="points" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_res_partner_search_inherit" model="ir.ui.view">
+        <field name="name">view.res.partner.search.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Customers" name="woo_imported_customers"
+                    domain="[('customer_rank', '>=', 1)]" />
+                <separator />
+                <filter string="Vendors" name="woo_vendors"
+                    domain="[('supplier_rank', '>=', 1)]" />
+                <separator />
+                <filter string="B2B" name="woo_b2b"
+                    domain="[('b2b', '=', 'b2b')]" />
+                <separator />
+                <filter string="B2C" name="woo_b2c"
+                    domain="[('b2b', '=', 'b2c')]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_custom_res_partner" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_id" ref="base.view_partner_tree" />
+        <field name="context">{'search_default_woo_imported_customers': 1}</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_vendor_list_4"
+        name="Vendor List"
+        action="account.res_partner_action_supplier"
+        parent="stock.menu_stock_root"
+        sequence="160" />
+    <menuitem
+        id="menu_vendor_list_5"
+        name="Vendor List"
+        action="account.res_partner_action_supplier"
+        parent="sale.sale_menu_root"
+        sequence="160" />
+
+    <menuitem
+        id="menu_vendor_list_6"
+        name="Vendor List"
+        action="account.res_partner_action_supplier"
+        parent="woo_menu_root"
+        sequence="160" />
+
+    <menuitem
+        id="menu_vendor_list_2"
+        name="Vendor List"
+        action="account.res_partner_action_supplier"
+        parent="purchase.menu_purchase_root"
+        sequence="149" />
+
+    <menuitem
+        id="menu_vendor_list_3"
+        name="Vendor List"
+        action="account.res_partner_action_supplier"
+        parent="account.menu_finance"
+        sequence="150" />
+
+    <menuitem
+        id="menu_customer_list_3"
+        name="Customer List"
+        action="odoo_woo_commerce.action_custom_res_partner"
+        parent="account.menu_finance"
+        sequence="151" />
+
+    <menuitem
+        id="menu_customer_list_2"
+        name="Customer List"
+        action="odoo_woo_commerce.action_custom_res_partner"
+        parent="purchase.menu_purchase_root"
+        sequence="152" />
+
+
+</odoo>

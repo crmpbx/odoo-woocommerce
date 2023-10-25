@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_category_tree_view_inherit" model="ir.ui.view">
+        <field name="name">product.category.tree.inherit</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_list_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">woo_import_product_category_button</attribute>
+            </xpath>
+            <field name="display_name" position="after">
+                <field name="woo_id" readonly="1" />
+                <field name="woo_instance_id" readonly="1" />
+                <field name="is_exported" />
+                <field name="slug" />
+            </field>
+        </field>
+    </record>
+
+    <record id="product_category_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.category.form.inherit</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <field name="thumb" widget="image" class="oe_avatar" readonly="1"/>
+            </xpath>
+            <xpath expr="//group[@name='first']" position="after">
+                <group>
+                <field name="slug" class="oe_inline" />
+
+                <field name="woo_instance_id" widget="selection" />
+                <field name="is_exported" />
+                <field name="woo_category_description" string="Description" placeholder="Your category description"/>
+                <p colspan="2" class="alert alert-warning" role="alert">
+                    <u>
+                        <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                    </u>
+                    <b>
+                        Do not input or change this unless you know what you are doing!
+                    </b>
+                </p>
+                <field name="woo_id" />
+                            <p colspan="2" class="alert alert-warning" role="alert">
+                                <u>
+                                    <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                                </u>
+                                <b>
+                                    Please choose image of image extensions .jpg .jpeg,
+                                    .png.
+                                </b>
+                                <b>
+                                    Wait for all of them to appear in the section bellow
+                                    before
+                                    saving.
+                                </b>
+                            </p>
+                            <field name="woo_image_2" type="base64" widget="many2many_binary"/>
+                            
+                </group>
+                <group>
+                <field name="thumb" widget="image" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="view_product_category_search_inherit" model="ir.ui.view">
+        <field name="name">view.product.category.search.inherit</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_search_view" />
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Woo Synced Categories" name="woo_imported_categories"
+                    domain="[('is_exported', '=', True)]" />
+            </search>
+        </field>
+    </record> -->
+
+    <record id="action_product_category_woo" model="ir.actions.act_window">
+        <field name="name">Product Category</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.category</field>
+        <field name="view_id" ref="product.product_category_list_view" />
+        <field name="context">{'search_default_woo_imported_categories': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
